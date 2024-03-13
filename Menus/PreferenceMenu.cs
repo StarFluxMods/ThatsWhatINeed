@@ -16,6 +16,8 @@ namespace ThatsWhatINeed.Menus
         private Option<int> notificationSound = new Option<int>(new List<int> { 0, 1, 2 }, Mod.Manager.GetPreference<PreferenceInt>("notificationSound").Value, new List<string> { "None", "Bell Ring", "Scoom Mode" });
         private Option<float> bellVolume = new Option<float>(new List<float> { 0.0f, 0.25f, 0.50f, 0.75f, 1.0f }, Mod.Manager.GetPreference<PreferenceFloat>("bellVolume").Value, new List<string> { "0%", "25%", "50%", "75%", "100%" });
         private Option<float> scoomVolume = new Option<float>(new List<float> { 0.0f, 0.25f, 0.50f, 0.75f, 1.0f }, Mod.Manager.GetPreference<PreferenceFloat>("scoomVolume").Value, new List<string> { "0%", "25%", "50%", "75%", "100%" });
+        private Option<bool> shouldWarningFlash = new Option<bool>(new List<bool> { true, false }, Mod.Manager.GetPreference<PreferenceBool>("shouldWarningFlash").Value, new List<string> { "Enabled", "Disabled" });
+        private Option<float> warningPercentage = new Option<float>(new List<float> { 0.0f, 0.25f, 0.5f, 0.75f, 1.0f }, Mod.Manager.GetPreference<PreferenceFloat>("warningPercentage").Value, new List<string> { "0%", "25%", "50%", "75%", "100%" });
 
         public override void Setup(int player_id)
         {
@@ -25,6 +27,26 @@ namespace ThatsWhatINeed.Menus
             notificationSound.OnChanged += delegate (object _, int result)
             {
                 Mod.Manager.GetPreference<PreferenceInt>("notificationSound").Set(result);
+            };
+            New<SpacerElement>(true);
+            
+            
+            AddLabel("Flashing Warning Indicator");
+            New<SpacerElement>(true);
+            AddSelect(shouldWarningFlash);
+            shouldWarningFlash.OnChanged += delegate (object _, bool result)
+            {
+                Mod.Manager.GetPreference<PreferenceBool>("shouldWarningFlash").Set(result);
+            };
+            New<SpacerElement>(true);
+            
+            
+            AddLabel("Warning Bar Percentage");
+            New<SpacerElement>(true);
+            AddSelect(warningPercentage);
+            warningPercentage.OnChanged += delegate (object _, float result)
+            {
+                Mod.Manager.GetPreference<PreferenceFloat>("warningPercentage").Set(result);
             };
             New<SpacerElement>(true);
             

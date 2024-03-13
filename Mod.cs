@@ -10,7 +10,9 @@ using KitchenLib.Event;
 using KitchenLib.Preferences;
 using KitchenLib.References;
 using KitchenLib.Utils;
+using Shapes;
 using ThatsWhatINeed.Menus;
+using ThatsWhatINeed.Views;
 using UnityEngine;
 
 namespace ThatsWhatINeed
@@ -19,7 +21,7 @@ namespace ThatsWhatINeed
     {
         public const string MOD_GUID = "com.starfluxgames.thatswhatineed";
         public const string MOD_NAME = "Thats What I Need";
-        public const string MOD_VERSION = "0.1.0";
+        public const string MOD_VERSION = "0.1.1";
         public const string MOD_AUTHOR = "StarFluxGames";
         public const string MOD_GAMEVERSION = ">=1.1.9";
 
@@ -38,16 +40,62 @@ namespace ThatsWhatINeed
         {
         }
 
+        private void SetupWarningIndicatorPrefab()
+        {
+            GameObject indicator = Bundle.LoadAsset<GameObject>("WarningIndicator");
+            
+            Rectangle Back = indicator.GetChild("Container/GameObject/Container/GameObject (1)/Patience Container/Back").AddComponent<Rectangle>();
+            Rectangle Gray = indicator.GetChild("Container/GameObject/Container/GameObject (1)/Patience Container/Gray").AddComponent<Rectangle>();
+            Rectangle Bar = indicator.GetChild("Container/GameObject/Container/GameObject (1)/Patience Container/Bar").AddComponent<Rectangle>();
+                
+            Back.Color = new Color(0.06441849f, 0.0489854f, 0.1509434f, 0.4980392f);
+            Gray.Color = new Color(0.2784314f, 0.2784314f, 0.3529412f);
+            Bar.Color = new Color(0.5882353f, 0.9882354f, 0.1843137f);
+
+            Back.Width = 0.4f;
+            Back.Height = 0.7f;
+            Gray.Width = 0.3f;
+            Gray.Height = 0.6f;
+            Bar.Width = 0.3f;
+            Bar.Height = 0.6f;
+
+            Back.Type = Rectangle.RectangleType.RoundedSolid;
+            Gray.Type = Rectangle.RectangleType.RoundedSolid;
+            Bar.Type = Rectangle.RectangleType.RoundedSolid;
+                
+            Back.CornerRadiii = new Vector4(0.05f, 0.05f, 0.05f, 0.05f);
+            Gray.CornerRadiii = new Vector4(0.02f, 0.02f, 0.02f, 0.02f);
+            Bar.CornerRadiii = new Vector4(0.02f, 0.02f, 0.02f, 0.02f);
+                
+            Back.Thickness = 0.02f;
+            Gray.Thickness = 0.02f;
+            Bar.Thickness = 0.02f;
+            
+            WarningIndicatorView view = indicator.AddComponent<WarningIndicatorView>();
+
+            view.Container = indicator.GetChild("Container");
+            view.Animator = indicator.GetChild("Container/GameObject/Container").GetComponent<Animator>();
+            view.Patience = Bar;
+            view.bellSound = indicator.GetChild("BellSound").GetComponent<AudioSource>();
+            view.scoomSound = indicator.GetChild("ScoomSound").GetComponent<AudioSource>();
+            
+            view.Container.SetActive(false);
+        }
+
         protected override void OnPostActivate(KitchenMods.Mod mod)
         {
             Bundle = mod.GetPacks<AssetBundleModPack>().SelectMany(e => e.AssetBundles).FirstOrDefault() ?? throw new MissingAssetBundleException(MOD_GUID);
             Logger = InitLogger();
 
+            SetupWarningIndicatorPrefab();
+            
             Manager = new PreferenceManager(MOD_GUID);
 
             Manager.RegisterPreference(new PreferenceInt("notificationSound", 1));
             Manager.RegisterPreference(new PreferenceFloat("bellVolume", 0.25f));
             Manager.RegisterPreference(new PreferenceFloat("scoomVolume", 0.25f));
+            Manager.RegisterPreference(new PreferenceBool("shouldWarningFlash", true));
+            Manager.RegisterPreference(new PreferenceFloat("warningPercentage", 0.5f));
             Manager.Load();
             Manager.Save();
 
@@ -56,15 +104,10 @@ namespace ThatsWhatINeed
                 if (!args.firstBuild) return;
 
                 Appliance desk = args.gamedata.Get<Appliance>(ApplianceReferences.BlueprintOrderingDesk);
-                GameObject icon = Bundle.LoadAsset<GameObject>("Icon");
-                ThatsWhatINeed.Views.BlueprintDeskView view = icon.AddComponent<ThatsWhatINeed.Views.BlueprintDeskView>();
-
-                icon.transform.parent = desk.Prefab.GetChild("Container").transform;
-                icon.transform.localPosition = new Vector3(0, 0, 0);
-
-                view.prefab = icon.GetChild("Container");
-                view.bellSound = icon.GetChild("BellSound").GetComponent<AudioSource>();
-                view.scoomSound = icon.GetChild("ScoomSound").GetComponent<AudioSource>();
+                
+                GameObject warningIndicator = Bundle.LoadAsset<GameObject>("WarningIndicator");
+                warningIndicator.transform.parent = desk.Prefab.GetChild("Container").transform;
+                warningIndicator.transform.localPosition = new Vector3(-0.5f, -0.8f, 0.2f);
             };
             
             ModsPreferencesMenu<MainMenuAction>.RegisterMenu(MOD_NAME, typeof(PreferenceMenu<MainMenuAction>), typeof(MainMenuAction));
