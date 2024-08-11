@@ -14,6 +14,7 @@ using Shapes;
 using ThatsWhatINeed.Menus;
 using ThatsWhatINeed.Views;
 using UnityEngine;
+using KitchenLogger = KitchenLib.Logging.KitchenLogger;
 
 namespace ThatsWhatINeed
 {
@@ -21,9 +22,9 @@ namespace ThatsWhatINeed
     {
         public const string MOD_GUID = "com.starfluxgames.thatswhatineed";
         public const string MOD_NAME = "Thats What I Need";
-        public const string MOD_VERSION = "0.1.1";
+        public const string MOD_VERSION = "0.1.2";
         public const string MOD_AUTHOR = "StarFluxGames";
-        public const string MOD_GAMEVERSION = ">=1.1.9";
+        public const string MOD_GAMEVERSION = ">=1.2.0";
 
         public static AssetBundle Bundle;
         public static KitchenLogger Logger;
@@ -110,17 +111,17 @@ namespace ThatsWhatINeed
                 warningIndicator.transform.localPosition = new Vector3(-0.5f, -0.8f, 0.2f);
             };
             
-            ModsPreferencesMenu<MainMenuAction>.RegisterMenu(MOD_NAME, typeof(PreferenceMenu<MainMenuAction>), typeof(MainMenuAction));
-            ModsPreferencesMenu<PauseMenuAction>.RegisterMenu(MOD_NAME, typeof(PreferenceMenu<PauseMenuAction>), typeof(PauseMenuAction));
+            ModsPreferencesMenu<MenuAction>.RegisterMenu(MOD_NAME, typeof(PreferenceMenu<MenuAction>), typeof(MenuAction));
+            ModsPreferencesMenu<MenuAction>.RegisterMenu(MOD_NAME, typeof(PreferenceMenu<MenuAction>), typeof(MenuAction));
             
             Events.MainMenuView_SetupMenusEvent += (s, args) =>
             {
-                args.addMenu.Invoke(args.instance, new object[] { typeof(PreferenceMenu<MainMenuAction>), new PreferenceMenu<MainMenuAction>(args.instance.ButtonContainer, args.module_list) });
+                args.addMenu.Invoke(args.instance, new object[] { typeof(PreferenceMenu<MenuAction>), new PreferenceMenu<MenuAction>(args.instance.ButtonContainer, args.module_list) });
             };
             
             Events.PlayerPauseView_SetupMenusEvent += (s, args) =>
             {
-                args.addMenu.Invoke(args.instance, new object[] { typeof(PreferenceMenu<PauseMenuAction>), new PreferenceMenu<PauseMenuAction>(args.instance.ButtonContainer, args.module_list) });
+                args.addMenu.Invoke(args.instance, new object[] { typeof(PreferenceMenu<MenuAction>), new PreferenceMenu<MenuAction>(args.instance.ButtonContainer, args.module_list) });
             };
         }
     }

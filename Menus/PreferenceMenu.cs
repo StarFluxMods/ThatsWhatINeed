@@ -27,6 +27,7 @@ namespace ThatsWhatINeed.Menus
             notificationSound.OnChanged += delegate (object _, int result)
             {
                 Mod.Manager.GetPreference<PreferenceInt>("notificationSound").Set(result);
+                Mod.Manager.Save();
             };
             New<SpacerElement>(true);
             
@@ -37,6 +38,7 @@ namespace ThatsWhatINeed.Menus
             shouldWarningFlash.OnChanged += delegate (object _, bool result)
             {
                 Mod.Manager.GetPreference<PreferenceBool>("shouldWarningFlash").Set(result);
+                Mod.Manager.Save();
             };
             New<SpacerElement>(true);
             
@@ -47,6 +49,7 @@ namespace ThatsWhatINeed.Menus
             warningPercentage.OnChanged += delegate (object _, float result)
             {
                 Mod.Manager.GetPreference<PreferenceFloat>("warningPercentage").Set(result);
+                Mod.Manager.Save();
             };
             New<SpacerElement>(true);
             
@@ -57,6 +60,7 @@ namespace ThatsWhatINeed.Menus
             bellVolume.OnChanged += delegate (object _, float result)
             {
                 Mod.Manager.GetPreference<PreferenceFloat>("bellVolume").Set(result);
+                Mod.Manager.Save();
             };
             New<SpacerElement>(true);
             
@@ -67,6 +71,7 @@ namespace ThatsWhatINeed.Menus
             scoomVolume.OnChanged += delegate (object _, float result)
             {
                 Mod.Manager.GetPreference<PreferenceFloat>("scoomVolume").Set(result);
+                Mod.Manager.Save();
             };
             
             New<SpacerElement>(true);
