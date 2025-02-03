@@ -22,7 +22,7 @@ namespace ThatsWhatINeed
     {
         public const string MOD_GUID = "com.starfluxgames.thatswhatineed";
         public const string MOD_NAME = "Thats What I Need";
-        public const string MOD_VERSION = "0.1.2";
+        public const string MOD_VERSION = "0.1.3";
         public const string MOD_AUTHOR = "StarFluxGames";
         public const string MOD_GAMEVERSION = ">=1.2.0";
 

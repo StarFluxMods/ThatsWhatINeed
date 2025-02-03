@@ -44,6 +44,7 @@ namespace ThatsWhatINeed.Systems
             {
                 Player = player
             });
+            EntityManager.AddComponentData(entity, new CDoNotPersist());
             return entity;
         }
     }
